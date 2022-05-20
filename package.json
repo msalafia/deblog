@@ -1,0 +1,15 @@
+{
+  "name": "deblog",
+  "version": "1.0.0",
+  "description": "A simple console logger for debug experiments and flexible logging configuration",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marco Salafia",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.6.4"
+  }
+}
