@@ -5,7 +5,7 @@ import { IDeblog, IDeblogConfig } from "./types";
  *
  * @export
  * @param {IDeblogConfig} config - The configuration object for the deblog instance.
- * @return {*}  {IDeblog}
+ * @return {IDeblog} - The deblog instance.
  */
 export declare function createDeblog(config: IDeblogConfig): IDeblog;
 //# sourceMappingURL=create_deblog.d.ts.map

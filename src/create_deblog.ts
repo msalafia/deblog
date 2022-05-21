@@ -10,7 +10,7 @@ function isTLogLevel(level: string): level is TLogLevel {
  *
  * @export
  * @param {IDeblogConfig} config - The configuration object for the deblog instance.
- * @return {*}  {IDeblog}
+ * @return {IDeblog} - The deblog instance.
  */
 export function createDeblog(config: IDeblogConfig): IDeblog {
   if (!config) {

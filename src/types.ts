@@ -20,14 +20,11 @@ export interface IDeblogConfig {
   logs?: ILogConfig[]
 }
 
-export type IDeblog = {
+export interface IDeblog {
   getConfig(): IDeblogConfig;
-  enable(name: string): void;
-  disable(name: string): void;
-  restore(name: string): void;
   disableAllBut(...names: string[]): void;
   restoreAll(): void;
-  [k: string]: any
+  [k: string]: any | TLog
 }
 
 export interface IFlag {
