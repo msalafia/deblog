@@ -2,17 +2,20 @@
   "name": "deblog",
   "version": "1.0.0",
   "description": "A simple console logger for debug experiments and flexible logging configuration",
-  "main": "src/index.js",
-  "type": "module",
+  "main": "dist/deblog.cjs.js",
+  "browser": "dist/deblog.esm.js",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "go": "node dist/index.js",
-    "start": "npx tsc && node dist/index.js",
-    "build": "npx tsc",
+    "build": "rm -rf dist && npx tsc && npx rollup --config",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Marco Salafia",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
+    "rollup": "^2.74.1",
     "typescript": "^4.6.4"
   }
 }
