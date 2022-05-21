@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "A simple console logger for debug experiments and flexible logging configuration",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "start": "node src/index.js",
+    "go": "node dist/index.js",
+    "start": "npx tsc && node dist/index.js",
+    "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Marco Salafia",
