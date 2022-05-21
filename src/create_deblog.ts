@@ -1,4 +1,4 @@
-import { IDeblog, IDeblogConfig, IFlag, ILogConfig, TLog, TLogLevel } from "./types";
+import { IDeblog, IDeblogConfig, IDynamicLogs, IFlag, ILogConfig, TLog, TLogLevel } from "./types";
 
 function isTLogLevel(level: string): level is TLogLevel {
   return ["log", "debug", "info", "warn", "error"].indexOf(level) !== -1;
@@ -12,7 +12,7 @@ function isTLogLevel(level: string): level is TLogLevel {
  * @param {IDeblogConfig} config - The configuration object for the deblog instance.
  * @return {IDeblog} - The deblog instance.
  */
-export function createDeblog(config: IDeblogConfig): IDeblog {
+export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDeblog & T {
   if (!config) {
     throw new Error("A configuration object is required in order to create a Deblog instance.");
   }
@@ -43,23 +43,23 @@ export function createDeblog(config: IDeblogConfig): IDeblog {
     tempLog.disable = () => (flag = false);
     tempLog.restore = () => (flag = defFlag);
     Deblog.prototype[log.name] = tempLog;
-
-    Deblog.prototype.disableAllBut = function (...names: string[]) {
-      let prototype = Object.getPrototypeOf(this);
-      for (let log in prototype) {
-        if (names.indexOf(log) === -1 && prototype[log].disable) {
-          prototype[log].disable();
-        }
-      }
-    };
-
-    Deblog.prototype.restoreAll = function () {
-      let prototype = Object.getPrototypeOf(this);
-      for (let log in prototype) {
-        prototype[log].restore && prototype[log].restore();
-      }
-    };
   }
+
+  Deblog.prototype.disableAllBut = function (...names: string[]) {
+    let prototype = Object.getPrototypeOf(this);
+    for (let log in prototype) {
+      if (names.indexOf(log) === -1 && prototype[log].disable) {
+        prototype[log].disable();
+      }
+    }
+  };
+
+  Deblog.prototype.restoreAll = function () {
+    let prototype = Object.getPrototypeOf(this);
+    for (let log in prototype) {
+      prototype[log].restore && prototype[log].restore();
+    }
+  };
 
   return new (Deblog as any)(config);
 }

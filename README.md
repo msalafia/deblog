@@ -128,3 +128,25 @@ A log configuration is structured with the following properties:
 - `level`: The method that will be called on the console object. The only allowed values are `"log" | "debug" | "info" | "warn" | "error"`. For commodity, you can import and use the enumeration `LogLevels` to assign a proper value to this property.
 - `tag`: A string to be attached at the beginning of the log line printed in the console.
 - `enabled`: Specifies if the logging method will print in the console when it will be called.
+
+## Note for Typescript
+
+Since the logging methods are dynamically defined by the user, the intellisense cannot autocomplete them. For this reason, the method `createDeblog()` has been defined as generics for convenience (i.e., `createDeblog<T extends IDynamicLogs>()`).
+
+in this way, you can define a type containing all your custom logging methods and pass to the method `createDeblog` as generic parameter.
+
+```ts
+interface MyLogs extends IDynamicLogs {
+  wwm: TLog;
+  vsm: TLog;
+}
+
+let log = createDeblog<MyLogs>(configuration);
+
+// Also
+
+let log = createDeblog<{
+  wwm: TLog;
+  vsm: TLog;
+}>(configuration);
+```

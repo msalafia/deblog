@@ -49,21 +49,21 @@ function createDeblog(config) {
         tempLog.disable = () => (flag = false);
         tempLog.restore = () => (flag = defFlag);
         Deblog.prototype[log.name] = tempLog;
-        Deblog.prototype.disableAllBut = function (...names) {
-            let prototype = Object.getPrototypeOf(this);
-            for (let log in prototype) {
-                if (names.indexOf(log) === -1 && prototype[log].disable) {
-                    prototype[log].disable();
-                }
-            }
-        };
-        Deblog.prototype.restoreAll = function () {
-            let prototype = Object.getPrototypeOf(this);
-            for (let log in prototype) {
-                prototype[log].restore && prototype[log].restore();
-            }
-        };
     }
+    Deblog.prototype.disableAllBut = function (...names) {
+        let prototype = Object.getPrototypeOf(this);
+        for (let log in prototype) {
+            if (names.indexOf(log) === -1 && prototype[log].disable) {
+                prototype[log].disable();
+            }
+        }
+    };
+    Deblog.prototype.restoreAll = function () {
+        let prototype = Object.getPrototypeOf(this);
+        for (let log in prototype) {
+            prototype[log].restore && prototype[log].restore();
+        }
+    };
     return new Deblog(config);
 }
 

@@ -31,8 +31,12 @@ export interface IFlag {
   [name: string]: boolean;
 }
 
-export type TLog = {
+export type TLog = ((...args: any[]) => void) & {
   enable(): void;
   disable(): void;
   restore(): void;
+}
+
+export interface IDynamicLogs {
+  [log: string]: TLog;
 }

@@ -24,9 +24,12 @@ export interface IDeblog {
 export interface IFlag {
     [name: string]: boolean;
 }
-export declare type TLog = {
+export declare type TLog = ((...args: any[]) => void) & {
     enable(): void;
     disable(): void;
     restore(): void;
 };
+export interface IDynamicLogs {
+    [log: string]: TLog;
+}
 //# sourceMappingURL=types.d.ts.map
