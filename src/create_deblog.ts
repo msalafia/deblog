@@ -8,7 +8,7 @@ function isTLogLevel(level: string): level is TLogLevel {
  * A factory method that returns a Deblog instance on the basis of the 
  * configuration object provided.
  *
- * @export
+ * @template T A convenient type exposing the logging methods speicifed in ten configuration.
  * @param {IDeblogConfig} config - The configuration object for the deblog instance.
  * @return {IDeblog} - The deblog instance.
  */
@@ -45,6 +45,13 @@ export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDe
     Deblog.prototype[log.name] = tempLog;
   }
 
+  /**
+   * A convenience method to disable all the logs but the ones whose names 
+   * are provided as arguments.
+   * 
+   * @param {...string} logs - The names of the logs that will NOT be disabled.
+   * @returns {void}
+   */
   Deblog.prototype.disableAllBut = function (...names: string[]) {
     let prototype = Object.getPrototypeOf(this);
     for (let log in prototype) {
@@ -54,6 +61,9 @@ export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDe
     }
   };
 
+  /**
+   * A convenience method to restore all the logs to the original configured value.
+   */
   Deblog.prototype.restoreAll = function () {
     let prototype = Object.getPrototypeOf(this);
     for (let log in prototype) {
