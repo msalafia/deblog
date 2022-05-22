@@ -9,22 +9,24 @@ export enum LogLevels {
 export type TLogLevel = LogLevels |  "log" | "debug" | "info" | "warn" | "error";
 
 export interface ILogConfig {
-  name: string,
-  level: TLogLevel,
-  tag?: string,
-  enabled?: boolean,
-
+  name: string;
+  level: TLogLevel;
+  tag?: string;
+  enabled?: boolean;
 }
 
 export interface IDeblogConfig {
-  logs?: ILogConfig[]
+  id?: string;
+  logs?: ILogConfig[];
+  persist?: boolean;
 }
 
 export interface IDeblog {
+  id: string;
   getConfig(): IDeblogConfig;
   disableAllBut(...names: string[]): void;
   restoreAll(): void;
-  [k: string]: any | TLog
+  [k: string]: any | TLog;
 }
 
 export interface IFlag {

@@ -4,6 +4,20 @@ function isTLogLevel(level: string): level is TLogLevel {
   return ["log", "debug", "info", "warn", "error"].indexOf(level) !== -1;
 }
 
+function generateId(length: number) {
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
+/**
+ * The repository of all deblogs defined in this module.
+ */
+const repository = new Map();
+
 /**
  * A factory method that returns a Deblog instance on the basis of the 
  * configuration object provided.
@@ -24,7 +38,7 @@ export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDe
   }, {});
 
   function Deblog(this: IDeblog & { new(): IDeblog}) {
-
+    this.id = _config.id ?? generateId(12);
     this.getConfig = () => _config;
   };
 
@@ -71,5 +85,26 @@ export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDe
     }
   };
 
-  return new (Deblog as any)(config);
+  const deblog = new (Deblog as any)(config);
+  _config.persist && repository.set(deblog.id, deblog);
+  return deblog;
+}
+
+/**
+ * Returns the deblog instance with the given id.
+ * 
+ * @param {string} id - The id of the deblog instance. 
+ * @returns - A deblog instance corresponding to the id provided or undefined.
+ */
+export function getDeblog(id: string): IDeblog | undefined {
+  return repository.get(id);
+}
+
+/**
+ * Get all the deblog instances defined so far.
+ * 
+ * @returns - An array of all the deblog instances.
+ */
+export function getDeblogs(): IDeblog[] {
+  return Array.from(repository.values());
 }
