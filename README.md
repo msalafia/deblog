@@ -1,5 +1,8 @@
 # Deblog.js
 
+![GitHub package.json version](https://img.shields.io/github/package-json/v/msalafia/deblog.svg)
+![npm](https://img.shields.io/npm/v/deblog.svg)
+
 Deblog.js is a simple and flexible wrapper of the **console** object that allows the definition of custom methods for logging purposes, defining mnemonic names, customized tags for logging messages ed severity log levels.
 
 The best feature of Deblog is that allows the developer to define which one of the logging methods created should print or not.
