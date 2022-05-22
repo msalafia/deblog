@@ -3,19 +3,22 @@
   "version": "1.0.0",
   "description": "A simple console logger for debug experiments and flexible logging configuration",
   "main": "dist/deblog.cjs.js",
+  "module": "dist/deblog.esm.js",
   "browser": "dist/deblog.esm.js",
-  "types": "types/index.d.ts",
+  "types": "types/deblog.esm.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist && rm -rf types && npx tsc && npx rollup --config",
+    "build": "rm -rf dist && rm -rf types && npx rollup --config",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Marco Salafia",
   "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.0",
     "rollup": "^2.74.1",
+    "rollup-plugin-ts": "^2.0.7",
     "typescript": "^4.6.4"
   }
 }

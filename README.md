@@ -105,12 +105,12 @@ This will produce the following output:
 [21:08:07] BAR - 4 Connection Error
 ```
 
-## Configuration
-
-The configuration object contains a property `logs` wich is an array of configuration for all the logging methods (i.e., logs) required in the deblog instance. A log configuration is an object with the following properties: `name, level, tag, enabled`.
+## Deblog Configuration object
 
 ```js
 {
+  id?: string
+  persist?: boolean
   logs: [
     {
       name: string,
@@ -122,12 +122,61 @@ The configuration object contains a property `logs` wich is an array of configur
 }
 ```
 
+A deblog configuration object is structured with the following properties:
+
+- `id`: It defines the unique name for this deblog instance. It's optional and, if it is not provided, an id will be automatically generated.
+- `persist`: A flag indicating whether the deblog instance should be saved in the Deblog internal repository. See the section "**Deblog Repository**". It's optional and the default falue is "false".
+- `logs`: An array of log configuration objects (described in the reminder). It's optional and the default value is "[]".
+
 A log configuration is structured with the following properties:
 
 - `name`: A string representing the name of the logging method that will be exposed by the deblog instance.
 - `level`: The method that will be called on the console object. The only allowed values are `"log" | "debug" | "info" | "warn" | "error"`. For commodity, you can import and use the enumeration `LogLevels` to assign a proper value to this property.
 - `tag`: A string to be attached at the beginning of the log line printed in the console.
 - `enabled`: Specifies if the logging method will print in the console when it will be called.
+
+## Deblog Repository
+
+Instances of deblog can be persisted in an internal Deblog repository which is just a Map containing all the deblog instances created with the configuration property `persist: true`. The repository uses the deblog instance `id` property as a key.
+
+You can always retrieve a deblog instance using the convenient methods exposed by Deblog.js:
+
+- `getDeblog(id: string): IDeblog`
+- `getDeblogs(): IDeblog[]`
+
+An example here:
+
+```js
+const dlog = createDeblog(configuration);
+
+dlog.foo("The id of the Deblog instance is:", dlog.id);
+
+let dlog2 = getDeblog("my-deblog");
+
+console.log("Same instance?:", dlog === dlog2);
+
+const dlog3 = createDeblog({
+  id: "new-deblog",
+  persist: true,
+  logs: [
+    {
+      name: "shout",
+      level: "log",
+      tag: "SHOUT -",
+    },
+  ],
+});
+
+console.log("All saved logs:", getDeblogs().length); // length: 2
+
+clearDeblogs(); // clear the Deblog repository
+
+console.log("All saved logs:", getDeblogs().length); // length: 0
+
+dlog.foo("I am still alive!"); // This will be logged anyways. clearDeblogs() doesn't delete deblog instances saved in your variables.
+```
+
+As shown, the method `clearDeblogs` clears the Deblog Repository but doesn't destroy the instances. Therefore, deblog instances in your variables still exists and works.
 
 ## Note for Typescript
 

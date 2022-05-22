@@ -21,7 +21,7 @@ const repository = new Map();
 /**
  * A factory method that returns a Deblog instance on the basis of the 
  * configuration object provided.
- *
+ * @function createDeblog
  * @template T A convenient type exposing the logging methods speicifed in ten configuration.
  * @param {IDeblogConfig} config - The configuration object for the deblog instance.
  * @return {IDeblog} - The deblog instance.
@@ -92,7 +92,7 @@ export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDe
 
 /**
  * Returns the deblog instance with the given id.
- * 
+ * @function getDeblog
  * @param {string} id - The id of the deblog instance. 
  * @returns - A deblog instance corresponding to the id provided or undefined.
  */
@@ -102,9 +102,17 @@ export function getDeblog(id: string): IDeblog | undefined {
 
 /**
  * Get all the deblog instances defined so far.
- * 
+ * @function getAllDeblogs
  * @returns - An array of all the deblog instances.
  */
 export function getDeblogs(): IDeblog[] {
   return Array.from(repository.values());
+}
+
+/**
+ * Remove all the deblg instances saved in the internal repository.
+ * @function removeAllDeblogs
+ */
+export function clearDeblogs() {
+  repository.clear();
 }

@@ -10,11 +10,23 @@ var LogLevels;
 function isTLogLevel(level) {
     return ["log", "debug", "info", "warn", "error"].indexOf(level) !== -1;
 }
+function generateId(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+/**
+ * The repository of all deblogs defined in this module.
+ */
+const repository = new Map();
 /**
  * A factory method that returns a Deblog instance on the basis of the
  * configuration object provided.
- *
- * @export
+ * @function createDeblog
+ * @template T A convenient type exposing the logging methods speicifed in ten configuration.
  * @param {IDeblogConfig} config - The configuration object for the deblog instance.
  * @return {IDeblog} - The deblog instance.
  */
@@ -30,6 +42,8 @@ function createDeblog(config) {
         return flags;
     }, {});
     function Deblog() {
+        var _a;
+        this.id = (_a = _config.id) !== null && _a !== void 0 ? _a : generateId(12);
         this.getConfig = () => _config;
     }
     for (let log of (_b = config.logs) !== null && _b !== void 0 ? _b : []) {
@@ -46,6 +60,13 @@ function createDeblog(config) {
         tempLog.restore = () => (flag = defFlag);
         Deblog.prototype[log.name] = tempLog;
     }
+    /**
+     * A convenience method to disable all the logs but the ones whose names
+     * are provided as arguments.
+     *
+     * @param {...string} logs - The names of the logs that will NOT be disabled.
+     * @returns {void}
+     */
     Deblog.prototype.disableAllBut = function (...names) {
         let prototype = Object.getPrototypeOf(this);
         for (let log in prototype) {
@@ -54,13 +75,42 @@ function createDeblog(config) {
             }
         }
     };
+    /**
+     * A convenience method to restore all the logs to the original configured value.
+     */
     Deblog.prototype.restoreAll = function () {
         let prototype = Object.getPrototypeOf(this);
         for (let log in prototype) {
             prototype[log].restore && prototype[log].restore();
         }
     };
-    return new Deblog(config);
+    const deblog = new Deblog(config);
+    _config.persist && repository.set(deblog.id, deblog);
+    return deblog;
+}
+/**
+ * Returns the deblog instance with the given id.
+ * @function getDeblog
+ * @param {string} id - The id of the deblog instance.
+ * @returns - A deblog instance corresponding to the id provided or undefined.
+ */
+function getDeblog(id) {
+    return repository.get(id);
+}
+/**
+ * Get all the deblog instances defined so far.
+ * @function getAllDeblogs
+ * @returns - An array of all the deblog instances.
+ */
+function getDeblogs() {
+    return Array.from(repository.values());
+}
+/**
+ * Remove all the deblg instances saved in the internal repository.
+ * @function removeAllDeblogs
+ */
+function clearDeblogs() {
+    repository.clear();
 }
 
-export { LogLevels, createDeblog };
+export { LogLevels, clearDeblogs, createDeblog, getDeblog, getDeblogs };
