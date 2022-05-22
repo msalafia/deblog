@@ -13,7 +13,7 @@ How many times you write console.log() in your code and never remove them becaus
 
 If you are that kind of _lazy_ javascript developer that uses lots of compulsive console.logs() in the code that will never be removed, Deblog is made for you.
 
-You can configure the Deblog instance for your project defining specific logging methods with a mnemonic name depending on the case they will be used. You can also customize them with a **tag** that will be attached as an header of the logged message. All of these logging methods (named **logs** in the context of Deblog.js) provides a flag to enable or disable them. Therefore, in the future, when you don't need a particular log in tour console, you can simply change its flag in the Deblog instance configuration.
+You can configure the Deblog instance for your project defining specific logging methods with a mnemonic name depending on the case they will be used. You can also customize them with a **tag** that will be attached as an header of the logged message. All of these logging methods (named **logs** in the context of Deblog.js) provides a flag to enable or disable them. Therefore, in the future, when you don't need a particular log in your console, you can simply change its flag in the Deblog instance configuration.
 
 ## Quickstart
 

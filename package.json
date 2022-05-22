@@ -1,6 +1,6 @@
 {
   "name": "deblog",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple console logger for debug experiments and flexible logging configuration",
   "repository": {
     "type": "git",
