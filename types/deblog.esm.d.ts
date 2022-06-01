@@ -62,5 +62,11 @@ declare function getDeblogs(): IDeblog[];
  * @function removeAllDeblogs
  */
 declare function clearDeblogs(): void;
-export { LogLevels, TLogLevel, ILogConfig, IDeblogConfig, IDeblog, IFlag, TLog, IDynamicLogs, createDeblog, getDeblog, getDeblogs, clearDeblogs };
+declare const deblog: {
+    createDeblog: typeof createDeblog;
+    getDeblog: typeof getDeblog;
+    getDeblogs: typeof getDeblogs;
+    clearDeblogs: typeof clearDeblogs;
+};
+export { deblog as default, LogLevels, TLogLevel, ILogConfig, IDeblogConfig, IDeblog, IFlag, TLog, IDynamicLogs, createDeblog, getDeblog, getDeblogs, clearDeblogs };
 //# sourceMappingURL=deblog.esm.d.ts.map

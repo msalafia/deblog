@@ -117,7 +117,10 @@ function clearDeblogs() {
     repository.clear();
 }
 
+const deblog = { createDeblog, getDeblog, getDeblogs, clearDeblogs };
+
 exports.clearDeblogs = clearDeblogs;
 exports.createDeblog = createDeblog;
+exports["default"] = deblog;
 exports.getDeblog = getDeblog;
 exports.getDeblogs = getDeblogs;

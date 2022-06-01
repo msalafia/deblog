@@ -113,4 +113,6 @@ function clearDeblogs() {
     repository.clear();
 }
 
-export { LogLevels, clearDeblogs, createDeblog, getDeblog, getDeblogs };
+const deblog = { createDeblog, getDeblog, getDeblogs, clearDeblogs };
+
+export { LogLevels, clearDeblogs, createDeblog, deblog as default, getDeblog, getDeblogs };
