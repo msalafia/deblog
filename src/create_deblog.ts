@@ -1,6 +1,6 @@
 import { IDeblog, IDeblogConfig, IDynamicLogs, IFlag, ILogConfig, TLog, TLogLevel } from "./types";
 
-function isTLogLevel(level: string): level is TLogLevel {
+export function isTLogLevel(level: string): level is TLogLevel {
   return ["log", "debug", "info", "warn", "error"].indexOf(level) !== -1;
 }
 
