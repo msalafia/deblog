@@ -11,6 +11,7 @@ export type TLogLevel = LogLevels |  "log" | "debug" | "info" | "warn" | "error"
 export interface ILogConfig {
   name: string;
   level: TLogLevel;
+  timestamp?: boolean | (() => string);
   tag?: string;
   enabled?: boolean;
 }

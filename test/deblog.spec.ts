@@ -157,9 +157,9 @@ describe("test createDeblog for proper deblog creation", () => {
     deblog.yell("I am yelling in console.info");
     deblog.quiet("I am quiet in console.log");
 
-    expect(mockedConsoleLog).toBeCalledWith("undefined", "I am barking in console.log");
-    expect(mockedConsoleInfo).toBeCalledWith("undefined", "I am yelling in console.info");
-    expect(mockedConsoleLog).toBeCalledWith("undefined", "I am quiet in console.log");
+    expect(mockedConsoleLog).toBeCalledWith("I am barking in console.log");
+    expect(mockedConsoleInfo).toBeCalledWith("I am yelling in console.info");
+    expect(mockedConsoleLog).toBeCalledWith("I am quiet in console.log");
 
     deblog.disableAllBut("bark");
 
@@ -167,9 +167,9 @@ describe("test createDeblog for proper deblog creation", () => {
     deblog.yell("Don't yell me");
     deblog.quiet("Don't quiet me");
 
-    expect(mockedConsoleLog).toBeCalledWith("undefined", "Do bark me");
-    expect(mockedConsoleInfo).not.toBeCalledWith("undefined", "Don't yell me");
-    expect(mockedConsoleLog).not.toBeCalledWith("undefined", "Don't quiet me");
+    expect(mockedConsoleLog).toBeCalledWith("Do bark me");
+    expect(mockedConsoleInfo).not.toBeCalledWith("Don't yell me");
+    expect(mockedConsoleLog).not.toBeCalledWith("Don't quiet me");
     
     deblog.restoreAll();
 
@@ -177,9 +177,9 @@ describe("test createDeblog for proper deblog creation", () => {
     deblog.yell("Yell info logs again");
     deblog.quiet("Quite logs again");
 
-    expect(mockedConsoleLog).toBeCalledWith("undefined", "Bark still logs");
-    expect(mockedConsoleInfo).toBeCalledWith("undefined", "Yell info logs again");
-    expect(mockedConsoleLog).toBeCalledWith("undefined", "Quite logs again");
+    expect(mockedConsoleLog).toBeCalledWith("Bark still logs");
+    expect(mockedConsoleInfo).toBeCalledWith("Yell info logs again");
+    expect(mockedConsoleLog).toBeCalledWith("Quite logs again");
     jest.restoreAllMocks();
 
   });
@@ -203,21 +203,21 @@ describe("test createDeblog for proper deblog creation", () => {
     deblog.yell("Yell!");
     deblog.quiet("Quiet");
 
-    expect(mockedConsoleLog).toBeCalledWith("undefined", "Bark!");
-    expect(mockedConsoleLog).toBeCalledWith("undefined", "Yell!");
-    expect(mockedConsoleLog).not.toBeCalledWith("undefined", "Quiet!");
+    expect(mockedConsoleLog).toBeCalledWith("Bark!");
+    expect(mockedConsoleLog).toBeCalledWith("Yell!");
+    expect(mockedConsoleLog).not.toBeCalledWith("Quiet!");
 
     deblog.quiet.enable();
 
     deblog.quiet("Quiet again!");
-    expect(mockedConsoleLog).toBeCalledWith("undefined", "Quiet again!");
+    expect(mockedConsoleLog).toBeCalledWith("Quiet again!");
 
     deblog.yell.disable();
     deblog.bark("Bark again!");
     deblog.yell("Yell again");
 
-    expect(mockedConsoleLog).toBeCalledWith("undefined", "Bark again!");
-    expect(mockedConsoleLog).not.toBeCalledWith("undefined", "Yell again");
+    expect(mockedConsoleLog).toBeCalledWith("Bark again!");
+    expect(mockedConsoleLog).not.toBeCalledWith("Yell again");
     jest.restoreAllMocks();
   });
 });
@@ -270,5 +270,73 @@ describe("test persistence of deblogs", () => {
     clearDeblogs();
     allDebs = getDeblogs();
     expect(allDebs).toHaveLength(0);
+  });
+});
+
+describe("test timestamp feature", () => {
+  it("should add a timestamp (comformant to LocaleTimeString) to the log if the configuration is a boolean", () => {
+
+    jest.spyOn(console, "log").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true },
+      ]
+    }
+
+    const deblog = createDeblog(config);
+
+    deblog.bark("What's the time?");
+    expect(console.log).toBeCalledWith(expect.stringMatching(/^\[\d{2}:\d{2}:\d{2}\]$/), "[BARK]", "What's the time?");
+    jest.restoreAllMocks();
+  });
+
+  it("should add a timestamp to the log if a function returning a string as configuration is provided", () => {
+
+    jest.spyOn(console, "log").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: () => `[${new Date().toISOString()}]` },
+      ]
+    }
+
+    const deblog = createDeblog(config);
+
+    deblog.bark("What's the time?");
+    expect(console.log).toBeCalledWith(expect.stringMatching(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/), "[BARK]", "What's the time?");
+    jest.restoreAllMocks();
+  });
+
+  it("should throw is a timestamp configuration that its not a boolean or function is provided", () => {
+      
+      const config: IDeblogConfig = {
+        logs: [
+          { name: "bark", level: "log", tag: "[BARK]", timestamp: <any>123456 }
+        ]
+      }
+
+      expect(() => createDeblog(config)).toThrowError("Invalid timestamp configuration. The only types allowed are boolean and () => string.");
+  });
+
+  it("shoud generate two different timestamp if a boolean configuration is provided", () => {
+    let logMock = jest.spyOn(console, "log").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true },
+      ]
+    }
+
+    const deblog = createDeblog(config);
+
+    deblog.bark("First Bark");
+    jest.useFakeTimers({ now: Date.now() + 5000 });
+    deblog.bark("second Bark");
+    jest.useRealTimers();
+
+    expect(logMock.mock.calls[0][0]).not.toBe(logMock.mock.calls[1][0]);
+    
+    jest.restoreAllMocks();
   });
 });

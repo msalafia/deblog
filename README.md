@@ -39,7 +39,8 @@ const configuration = {
     {
       name: "bar",
       level: "log",
-      tag: `[${new Date(Date.now()).toLocaleTimeString()}] BAR -`,
+      tag: `BAR -`,
+      timestamp: () => `[${new Date(Date.now()).toLocaleTimeString()}]`,
     },
   ],
 };
@@ -49,7 +50,7 @@ let dlog = createDeblog(configuration);
 
 In the example above, we are configuring the deblog instance saved in the variable `dlog` in order to expose two custom logging methods named `foo` and `bar`, respectively. We are also specifying that the log `foo` will provide a logging level of **debug**, whilst the log `bar` will provide a logging level of **log**. The logging levels here are just the names of the methods that will be called on the **console** object wrapped by the deblog instance. Therefore, `console.debug()` and `console.log()` will be called for each call of `dlog.foo()` and `dlog.bar()`, respectively.
 
-Both logging methods are configured with a `tag` that will be printed at the beginning of each print in the console. As you can see for the **foo** log, you can customize a tag as you prefer. Furthermore, both logs are enabled using the `enabled` property in the configuration. Omitting such a property will enable the log by default.
+Both logging methods are configured with a `tag` that will be printed at the beginning of each print in the console. As you can see for the **foo** log, you can define a custom function that returns a string representing a timestamp that will be printed before the tag. Furthermore, both logs are enabled using the `enabled` property in the configuration. Omitting such a property will enable the log by default.
 
 Once created, a Deblog instance can be used like this:
 
@@ -119,6 +120,7 @@ This will produce the following output:
       name: string,
       level: "log" | "debug" | "info" | "warn" | "error",
       tag?: string,
+      timestamp?: boolean | (() => string)
       enabled?: boolean //default: true
     }
   ]
@@ -136,6 +138,7 @@ A log configuration is structured with the following properties:
 - `name`: A string representing the name of the logging method that will be exposed by the deblog instance.
 - `level`: The method that will be called on the console object. The only allowed values are `"log" | "debug" | "info" | "warn" | "error"`. For commodity, you can import and use the enumeration `LogLevels` to assign a proper value to this property.
 - `tag`: A string to be attached at the beginning of the log line printed in the console.
+- `timestamp`: It is used to configure a timestamp before the tag and the message of the log. When `true` is provided, a timestamp is generated using `[${(new Date()).toLocaleTimeString()}]`. You can also provide a function returning a string to customize your timestamp format or decide whatever to return. The default value is `false`.
 - `enabled`: Specifies if the logging method will print in the console when it will be called.
 
 ## Deblog Repository

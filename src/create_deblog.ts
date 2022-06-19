@@ -50,8 +50,28 @@ export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDe
 
     let flag = log.enabled ?? true;
     let defFlag = flag;
+
+    if (typeof log.timestamp !== "undefined" && typeof log.timestamp !== "function" && typeof log.timestamp !== "boolean") {
+      throw new Error("Invalid timestamp configuration. The only types allowed are boolean and () => string.");
+    }
+
+    //TODO: continue from here. refactor arguments array and probably change the tests.
     let tempLog = <TLog><unknown>(function () {
-      flag && console[log.level](`${log.tag}`, ...arguments);
+
+      let ts: string | undefined;
+      if (typeof log.timestamp !== "undefined") {
+        if (typeof log.timestamp === "function") {
+            ts = log.timestamp();
+        } else if (typeof log.timestamp === "boolean") {
+          ts = `[${(new Date()).toLocaleTimeString()}]`;
+        }
+      }
+
+      let args: string[] = [];
+      ts && args.push(ts);
+      log.tag && args.push(log.tag);
+      args = [...args, ...arguments];
+      flag && console[log.level](...args);
     });
     tempLog.enable = () => (flag = true);
     tempLog.disable = () => (flag = false);
