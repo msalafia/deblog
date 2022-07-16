@@ -35,6 +35,8 @@ export interface IFlag {
 }
 
 export type TLog = ((...args: any[]) => void) & {
+  group(label?: string): void;
+  groupEnd(): void;
   enable(): void;
   disable(): void;
   restore(): void;

@@ -340,3 +340,78 @@ describe("test timestamp feature", () => {
     jest.restoreAllMocks();
   });
 });
+
+describe("test group feature", () => {
+  it("should call the console group method after calling group() on a log", () => {
+    let groupMock = jest.spyOn(console, "group").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true },
+      ]
+    }
+    const deblog = createDeblog(config);
+    deblog.bark.group("Bark Group");
+    expect(groupMock).toBeCalled();
+    jest.restoreAllMocks();
+  });
+
+  it("should not call the console group method after calling group() on a disabled log", () => {
+    let groupMock = jest.spyOn(console, "group").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true, enabled: false },
+      ]
+    }
+    const deblog = createDeblog(config);
+
+    deblog.bark.group("Bark Group");
+    expect(groupMock).not.toBeCalled();
+    jest.restoreAllMocks();
+  });
+
+  it("should pass the 'label' argument to the console.group()", () => {
+    let groupMock = jest.spyOn(console, "group").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true },
+      ]
+    }
+    const deblog = createDeblog(config);
+
+    deblog.bark.group("Bark Group");
+    expect(console.group).toBeCalledWith("Bark Group");
+    jest.restoreAllMocks();
+  });
+
+  it("should call the console groupEnd method after calling groupEnd() on a log", () => {
+    let groupEndMock = jest.spyOn(console, "groupEnd").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true },
+      ]
+    }
+    const deblog = createDeblog(config);
+    deblog.bark.groupEnd("Bark Group");
+    expect(groupEndMock).toBeCalled();
+    jest.restoreAllMocks();
+  });
+
+  it("should not call the console group method after calling group() on a disabled log", () => {
+    let groupEndMock = jest.spyOn(console, "groupEnd").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true, enabled: false },
+      ]
+    }
+    const deblog = createDeblog(config);
+
+    deblog.bark.groupEnd("Bark Group");
+    expect(groupEndMock).not.toBeCalled();
+    jest.restoreAllMocks();
+  });
+});

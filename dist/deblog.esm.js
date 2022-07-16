@@ -52,12 +52,36 @@ function createDeblog(config) {
         }
         let flag = (_c = log.enabled) !== null && _c !== void 0 ? _c : true;
         let defFlag = flag;
+        if (typeof log.timestamp !== "undefined" && typeof log.timestamp !== "function" && typeof log.timestamp !== "boolean") {
+            throw new Error("Invalid timestamp configuration. The only types allowed are boolean and () => string.");
+        }
         let tempLog = (function () {
-            flag && console[log.level](`${log.tag}`, ...arguments);
+            let ts;
+            if (typeof log.timestamp !== "undefined") {
+                if (typeof log.timestamp === "function") {
+                    ts = log.timestamp();
+                }
+                else if (typeof log.timestamp === "boolean") {
+                    ts = `[${(new Date()).toLocaleTimeString()}]`;
+                }
+            }
+            let args = [];
+            ts && args.push(ts);
+            log.tag && args.push(log.tag);
+            args = [...args, ...arguments];
+            flag && console[log.level](...args);
         });
         tempLog.enable = () => (flag = true);
         tempLog.disable = () => (flag = false);
         tempLog.restore = () => (flag = defFlag);
+        tempLog.group = (label) => {
+            if (flag) {
+                if (typeof label === "undefined")
+                    return console.group();
+                return console.group(label);
+            }
+        };
+        tempLog.groupEnd = () => flag && console.groupEnd();
         Deblog.prototype[log.name] = tempLog;
     }
     /**

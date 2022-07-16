@@ -55,7 +55,6 @@ export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDe
       throw new Error("Invalid timestamp configuration. The only types allowed are boolean and () => string.");
     }
 
-    //TODO: continue from here. refactor arguments array and probably change the tests.
     let tempLog = <TLog><unknown>(function () {
 
       let ts: string | undefined;
@@ -76,6 +75,13 @@ export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDe
     tempLog.enable = () => (flag = true);
     tempLog.disable = () => (flag = false);
     tempLog.restore = () => (flag = defFlag);
+    tempLog.group = (label?: string) => {
+      if (flag) {
+        if (typeof label === "undefined") return console.group();
+        return console.group(label);
+      };
+    }
+    tempLog.groupEnd =() => flag && console.groupEnd();
     Deblog.prototype[log.name] = tempLog;
   }
 

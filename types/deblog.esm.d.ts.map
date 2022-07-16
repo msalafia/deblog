@@ -1,1 +1,1 @@
-{"version":3,"file":"deblog.esm.d.ts","sourceRoot":"","sources":["../src/index.ts","../src/types.ts","../src/create_deblog.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAMA,QAAA,MAAM,MAAM;;;;;CAAsD,CAAC"}
+{"version":3,"file":"deblog.esm.d.ts","sourceRoot":"","sources":["../src/index.ts","../src/types.ts","../src/create_deblog.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAMA,QAAA,MAAM,MAAM;;;;;CAAsD,CAAC"}

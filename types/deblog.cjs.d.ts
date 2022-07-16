@@ -9,6 +9,7 @@ type TLogLevel = LogLevels | "log" | "debug" | "info" | "warn" | "error";
 interface ILogConfig {
     name: string;
     level: TLogLevel;
+    timestamp?: boolean | (() => string);
     tag?: string;
     enabled?: boolean;
 }
@@ -28,6 +29,8 @@ interface IFlag {
     [name: string]: boolean;
 }
 type TLog = ((...args: any[]) => void) & {
+    group(label?: string): void;
+    groupEnd(): void;
     enable(): void;
     disable(): void;
     restore(): void;
