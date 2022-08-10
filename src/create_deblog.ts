@@ -80,7 +80,13 @@ export function createDeblog<T extends IDynamicLogs>(config: IDeblogConfig): IDe
         if (typeof label === "undefined") return console.group();
         return console.group(label);
       };
-    }
+    };
+    tempLog.groupCollapsed = (label?: string) => {
+      if (flag) {
+        if (typeof label === "undefined") return console.groupCollapsed();
+        return console.groupCollapsed(label);
+      };
+    };
     tempLog.groupEnd =() => flag && console.groupEnd();
     Deblog.prototype[log.name] = tempLog;
   }

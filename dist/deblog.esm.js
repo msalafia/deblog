@@ -81,6 +81,13 @@ function createDeblog(config) {
                 return console.group(label);
             }
         };
+        tempLog.groupCollapsed = (label) => {
+            if (flag) {
+                if (typeof label === "undefined")
+                    return console.groupCollapsed();
+                return console.groupCollapsed(label);
+            }
+        };
         tempLog.groupEnd = () => flag && console.groupEnd();
         Deblog.prototype[log.name] = tempLog;
     }

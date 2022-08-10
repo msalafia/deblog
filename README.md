@@ -20,7 +20,7 @@ You can configure the Deblog instance for your project defining specific logging
 To install Deblog in an npm project you can simply run:
 
 ```
-npm run install deblog
+npm install deblog
 ```
 
 In order to create an instace of Deblog you just import the method `createDeblog()` from the package and call it providing a proper configuration for your needs:

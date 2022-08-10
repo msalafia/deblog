@@ -400,7 +400,7 @@ describe("test group feature", () => {
     jest.restoreAllMocks();
   });
 
-  it("should not call the console group method after calling group() on a disabled log", () => {
+  it("should not call the console groupEnd method after calling groupEnd() on a disabled log", () => {
     let groupEndMock = jest.spyOn(console, "groupEnd").mockImplementation(() => {});
 
     const config: IDeblogConfig = {
@@ -412,6 +412,52 @@ describe("test group feature", () => {
 
     deblog.bark.groupEnd("Bark Group");
     expect(groupEndMock).not.toBeCalled();
+    jest.restoreAllMocks();
+  });
+});
+
+describe("test groupCollapsed feature", () => {
+  it("should call the console groupCollapsed method after calling groupCollapsed() on a log", () => {
+    let groupCollapsedMock = jest.spyOn(console, "groupCollapsed").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true },
+      ]
+    }
+    const deblog = createDeblog(config);
+    deblog.bark.groupCollapsed("Bark Group");
+    expect(groupCollapsedMock).toBeCalled();
+    jest.restoreAllMocks();
+  });
+
+  it("should not call the console groupCollapsed method after calling groupCollapsed() on a disabled log", () => {
+    let groupCollapsedMock = jest.spyOn(console, "groupCollapsed").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true, enabled: false },
+      ]
+    }
+    const deblog = createDeblog(config);
+
+    deblog.bark.groupCollapsed("Bark Group");
+    expect(groupCollapsedMock).not.toBeCalled();
+    jest.restoreAllMocks();
+  });
+
+  it("should pass the 'label' argument to the console.groupCollapsed()", () => {
+    let groupMock = jest.spyOn(console, "groupCollapsed").mockImplementation(() => {});
+
+    const config: IDeblogConfig = {
+      logs: [
+        { name: "bark", level: "log", tag: "[BARK]", timestamp: true },
+      ]
+    }
+    const deblog = createDeblog(config);
+
+    deblog.bark.groupCollapsed("Bark Group");
+    expect(console.groupCollapsed).toBeCalledWith("Bark Group");
     jest.restoreAllMocks();
   });
 });
